@@ -82,8 +82,8 @@ const FloatingHearts = () => {
       <style>{`
         @keyframes float-heart {
           0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-          10% { opacity: var(--opacity); }
-          90% { opacity: var(--opacity); }
+          10% { opacity: 0.4; }
+          90% { opacity: 0.4; }
           100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
         }
         .animate-float-heart {
@@ -117,7 +117,7 @@ const NoteImage = ({ src }) => {
   );
 };
 
-const App = () => {
+export default function App() {
   const [selectedNote, setSelectedNote] = useState(null);
   const [randomPhoto, setRandomPhoto] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,7 +125,6 @@ const App = () => {
   const [shuffledNotes, setShuffledNotes] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Raw data constant
   const rawDataList = useMemo(() => [
       { cat: 'LOYALTY', title: "You feel insecure about other girls", desc: "My love, just remember my phone screens. Bappa is on my lock screen as my blesser, but you are on my home screen as my ultimate blessing. That photo of me kissing you is my shield; it tells every girl who might look my way that I am already completely and irrevocably booked by the most gorgeous girl in Pune or Mumbai.", icon: <Shield size={20}/> },
       { cat: 'LOYALTY', title: "We are apart in a crowd", desc: "Even if I am in the busiest streets of Sangli-Miraj or Mumbai, my eyes are only searching for you. You aren’t just 'on the list' of people I care about; you are the entire list. I have zero interest in impressing anyone else because I have already found my world in you.", icon: <Search size={20}/> },
@@ -179,7 +178,6 @@ const App = () => {
       { cat: 'ROMANCE', title: "Just a random Tuesday", desc: "Just because it’s a normal day doesn’t mean my love is normal. I love you more today than I did yesterday. Thank you for being my girlfriend, my future, and my greatest blessing. I love you, baccha. Always and forever. ❤️", icon: <Smile size={20}/> },
   ], []);
 
-  // Shuffle Logic on Reload
   useEffect(() => {
     const shuffleArray = (array) => {
       const newArr = [...array];
@@ -191,7 +189,7 @@ const App = () => {
     };
 
     const formattedData = rawDataList.map((item, idx) => ({
-      id: `note-${idx}`, // Static ID to help React track elements
+      id: `note-${idx}`, 
       category: item.cat,
       title: item.title,
       desc: item.desc,
@@ -199,8 +197,6 @@ const App = () => {
     }));
 
     setShuffledNotes(shuffleArray(formattedData));
-    
-    // Slight delay to trigger entry animations
     setTimeout(() => setIsInitialLoad(false), 100);
   }, [rawDataList]);
 
@@ -264,7 +260,6 @@ const App = () => {
           </div>
         </header>
 
-        {/* The Grid Container */}
         <main className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 relative min-h-[400px]">
           {filteredNotes.length === 0 && !isInitialLoad && (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-rose-300 animate-in fade-in zoom-in">
@@ -308,7 +303,7 @@ const App = () => {
       </div>
 
       {selectedNote && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-rose-900/30 backdrop-blur-lg animate-in fade-in duration-500">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-rose-900/30 backdrop-blur-lg animate-in fade-in duration-500" onClick={() => setSelectedNote(null)}>
           <div 
             className="bg-white/95 w-full max-w-md rounded-[3rem] shadow-[0_32px_64px_-15px_rgba(225,29,72,0.3)] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
@@ -337,7 +332,7 @@ const App = () => {
             <div className="p-8 pt-6 relative overflow-y-auto grow custom-scrollbar">
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
               <div className="relative z-10">
-                <p className="text-xl leading-relaxed text-slate-700 font-serif italic mb-4 first-letter:text-5xl first-letter:font-bold first-letter:text-rose-500 first-letter:mr-2 first-letter:float-left">
+                <p className="text-xl leading-relaxed text-slate-700 font-serif italic mb-4">
                   {selectedNote.desc}
                 </p>
                 {randomPhoto && <NoteImage src={randomPhoto} />}
@@ -354,7 +349,6 @@ const App = () => {
               </button>
             </div>
           </div>
-          <div className="absolute inset-0 -z-10" onClick={() => setSelectedNote(null)}></div>
         </div>
       )}
 
@@ -374,6 +368,4 @@ const App = () => {
       `}</style>
     </div>
   );
-};
-
-export default App;
+}
